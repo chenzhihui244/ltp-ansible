@@ -1,0 +1,27 @@
+---
+# tasks file for ltp-ansible
+  - import_tasks: common.yml
+
+  - name: install dependencies
+    apt:
+        name=autoconf,automake,m4,git
+        state=present
+    when: ansible_distribution == 'Ubuntu'
+
+  - name: download ltp
+    git:
+        repo=https://github.com/linux-test-project/ltp.git
+        dest={{ builddir }}/ltp
+        version=20180118
+
+  - name: build ltp
+    shell:
+        cd {{ builddir }}/ltp;
+        make autotools;
+        ./configure --prefix={{ installdir }};
+        make -j{{ ansible_processor_count }};
+        make install
+
+  - name: run ltp
+    shell:
+        {{ installdir }}/runltp -n -t 168h

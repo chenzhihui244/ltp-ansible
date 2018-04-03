@@ -1,0 +1,7 @@
+---
+# defaults file for ltp-ansible
+topdir: /local/ltp-ansible
+builddir: "{{ topdir }}/build"
+pkgsdir: "{{ topdir }}/pkgs"
+installdir: "{{ topdir }}/install"
+outputdir: "{{ topdir }}/output"
