@@ -2,17 +2,24 @@
 # tasks file for ltp-ansible
   - import_tasks: common.yml
 
-  - name: install dependencies
+  - name: install dependencies on Ubuntu
     apt:
         name=autoconf,automake,m4,git
         state=present
     when: ansible_distribution == 'Ubuntu'
+
+  - name: install dependencies on Deepin
+    apt:
+        name=autoconf,automake,m4,git,build-essential
+        state=present
+    when: ansible_distribution == 'Deepin GNU/Linux'
 
   - name: download ltp
     git:
         repo=https://github.com/linux-test-project/ltp.git
         dest={{ builddir }}/ltp
         version=20180118
+        force=yes
 
   - name: build ltp
     shell:
@@ -22,6 +29,18 @@
         make -j{{ ansible_processor_count }};
         make install
 
+  - name: create bin link
+    file:
+        src={{ installdir }}/bin
+        dest={{ HOME }}/bin
+        state=link
+
+  - name: create runtest link
+    file:
+        src={{ installdir }}/runtest
+        dest={{ HOME }}/runtest
+        state=link
+
   - name: run ltp
     shell:
-        {{ installdir }}/runltp -n -t 168h
+        "{{ installdir }}/testscripts/ltpstress.sh -n -t 168*60*60"
