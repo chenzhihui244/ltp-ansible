@@ -29,18 +29,7 @@
         make -j{{ ansible_processor_count }};
         make install
 
-  - name: create bin link
-    file:
-        src={{ installdir }}/bin
-        dest={{ HOME }}/bin
-        state=link
-
-  - name: create runtest link
-    file:
-        src={{ installdir }}/runtest
-        dest={{ HOME }}/runtest
-        state=link
-
   - name: run ltp
     shell:
-        "{{ installdir }}/testscripts/ltpstress.sh -n -t 168*60*60"
+    cd {{ installdir }};
+    ./testscripts/ltpstress.sh -n -t 168
