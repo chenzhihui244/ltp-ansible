@@ -31,5 +31,5 @@
 
   - name: run ltp
     shell:
-    cd {{ installdir }};
-    ./testscripts/ltpstress.sh -n -t 168
+      cd {{ installdir }};
+      ./testscripts/ltpstress.sh -n -t 168
